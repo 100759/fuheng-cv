@@ -90,7 +90,6 @@ const personJsonLd = {
   </head>
   <body data-page-id={pageId}>
     <a href="#main" class="skip-link">跳到主要内容</a>
-    <div id="cursor-follower" aria-hidden="true"></div>
     <Header />
     <main id="main" tabindex="-1">
       <slot />
@@ -99,46 +98,6 @@ const personJsonLd = {
       <span>© 付恒 · {new Date().getFullYear()}</span>
       <a href={`mailto:${profile.email}`}>{profile.email}</a>
     </footer>
-    {/* D2: 鼠标光环跟随 — 触屏 / reduced-motion 自动禁用 */}
-    <script>
-      function bindCursor() {
-        const dot = document.getElementById('cursor-follower');
-        if (!dot) return;
-        const isTouch = matchMedia('(pointer: coarse)').matches;
-        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (isTouch || reduceMotion) { dot.style.display = 'none'; return; }
-        if ((window as any).__cursorBound) return;
-        (window as any).__cursorBound = true;
-
-        let tx = 0, ty = 0, x = 0, y = 0;
-        window.addEventListener('mousemove', (e) => {
-          tx = e.clientX; ty = e.clientY;
-          dot.style.opacity = '1';
-        });
-        window.addEventListener('mouseleave', () => { dot.style.opacity = '0'; });
-
-        const interactive = 'a, button, [role="button"], input, textarea, .card';
-        document.addEventListener('mouseover', (e) => {
-          const t = e.target as HTMLElement;
-          if (t.closest(interactive)) dot.classList.add('hover');
-          else dot.classList.remove('hover');
-        });
-
-        function tick() {
-          x += (tx - x) * 0.18;
-          y += (ty - y) * 0.18;
-          dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-          requestAnimationFrame(tick);
-        }
-        tick();
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', bindCursor, { once: true });
-      } else {
-        bindCursor();
-      }
-    </script>
-
     <style>
       .skip-link {
         position: absolute;
@@ -155,34 +114,6 @@ const personJsonLd = {
         left: 1rem;
         top: 1rem;
         outline: 2px solid var(--accent);
-      }
-
-      /* D2: 鼠标跟随光环 */
-      #cursor-follower {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 28px;
-        height: 28px;
-        border: 1px solid var(--ink);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.25s, width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
-        mix-blend-mode: difference;
-      }
-      #cursor-follower.hover {
-        width: 48px;
-        height: 48px;
-        background: rgba(255, 255, 255, 0.9);
-        border-color: transparent;
-      }
-      @media (pointer: coarse) {
-        #cursor-follower { display: none; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        #cursor-follower { display: none; }
       }
 
       footer {
