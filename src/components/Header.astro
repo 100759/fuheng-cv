@@ -323,10 +323,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     display: flex;
     flex-direction: column;
     opacity: 0;
-    transform: translateY(-12px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.25s ease;
   }
-  .drawer.open { opacity: 1; transform: translateY(0); }
+  .drawer.open { opacity: 1; }
   .drawer-head {
     display: flex;
     justify-content: space-between;
@@ -370,7 +369,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   span.drawer-link {
     cursor: default;
   }
-  .drawer-link:hover, .drawer-link:focus-visible { background: var(--bg-soft); padding-left: 1.85rem; }
+  .drawer-link:hover, .drawer-link:focus-visible { background: var(--bg-soft); }
   .drawer-link.active { color: var(--accent); }
   .dn-num {
     font-family: var(--font-mono);
