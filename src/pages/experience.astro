@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const jobs = [
+  {
+    company: '作业帮',
+    role: 'LPC 顾问',
+    period: '时间待补充',
+    summary: '工作内容待补充。',
+    tags: ['学业咨询', '用户沟通'],
+  },
+  {
+    company: '高顿',
+    role: '保研顾问',
+    period: '时间待补充',
+    summary: '工作内容待补充。',
+    tags: ['保研规划', '院校匹配', '文书 / 面试'],
+  },
+];
+---
+
+<Layout title="工作经历 · 付恒" pageId="experience">
+  <header class="page-head">
+    <div class="page-watermark" aria-hidden="true">02</div>
+    <p class="eyebrow">02 / 06 — Experience</p>
+    <h1 class="page-title">工作经历</h1>
+    <p class="page-lead">两段顾问经历,聚焦于教育咨询与个性化规划。</p>
+  </header>
+
+  <ol class="timeline">
+    {jobs.map((job, i) => (
+      <li class="item">
+        <div class="dot">
+          <span>{String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <article class="content">
+          <header class="head">
+            <h2>{job.role}</h2>
+            <span class="company">@ {job.company}</span>
+            <span class="period">{job.period}</span>
+          </header>
+          <p class="summary">{job.summary}</p>
+          <ul class="tags">
+            {job.tags.map(t => <li>{t}</li>)}
+          </ul>
+        </article>
+      </li>
+    ))}
+  </ol>
+</Layout>
+
+<style>
+  .timeline {
+    list-style: none;
+    position: relative;
+    padding-left: 4rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 1.25rem;
+    top: 1rem;
+    bottom: 1rem;
+    width: 1px;
+    background: var(--border);
+  }
+  .item {
+    position: relative;
+    padding-bottom: 3rem;
+  }
+  .item:last-child { padding-bottom: 0; }
+
+  .dot {
+    position: absolute;
+    left: -3.75rem;
+    top: 0.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    transition: all 0.25s;
+  }
+  .item:hover .dot {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    transform: scale(1.05);
+  }
+
+  .content {
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .item:hover .content {
+    border-color: var(--ink);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .head h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .company {
+    color: var(--accent);
+    font-size: 0.95rem;
+  }
+  .period {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+  }
+  .summary {
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+    max-width: 60ch;
+  }
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tags li {
+    padding: 0.2rem 0.7rem;
+    background: var(--bg-soft);
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+    border-radius: 999px;
+  }
+
+  @media (max-width: 600px) {
+    .timeline { padding-left: 2.75rem; }
+    .timeline::before { left: 0.85rem; }
+    .dot { left: -2.6rem; width: 2rem; height: 2rem; }
+    .content { padding: 1.25rem; }
+    .period { margin-left: 0; }
+  }
+</style>

@@ -1,0 +1,263 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const jobs = [
+  {
+    company: '作业帮',
+    role: 'LPC 顾问',
+    period: '时间待补充',
+    bullets: ['工作内容待补充'],
+  },
+  {
+    company: '高顿',
+    role: '保研顾问',
+    period: '时间待补充',
+    bullets: ['工作内容待补充'],
+  },
+];
+
+const skills = [
+  { title: '咨询能力', items: ['学业规划', '保研指导', '面试辅导', '文书润色'] },
+  { title: '工具',     items: ['Office', 'Notion', '飞书 / 企业微信'] },
+  { title: '语言',     items: ['中文 (母语)', 'English'] },
+];
+---
+
+<Layout title="简历 PDF · 付恒" description="付恒 个人简历(可打印 PDF 版本)" pageId="resume">
+  <div class="toolbar no-print">
+    <a class="back" href="/">← 返回主页</a>
+    <button id="print-btn" class="print-btn" type="button">
+      📄 打印 / 另存为 PDF
+    </button>
+  </div>
+
+  <article class="resume">
+    <header class="r-head">
+      <div class="r-name-block">
+        <h1>付恒</h1>
+        <p class="r-en">Fu Heng</p>
+      </div>
+      <div class="r-meta">
+        <p>顾问 / Consultant</p>
+        <p><a href="mailto:mail@fuheng.vip">mail@fuheng.vip</a></p>
+        <p>+86 178 8870 0580</p>
+        <p>石家庄 · Shijiazhuang</p>
+      </div>
+    </header>
+
+    <section class="r-section">
+      <h2>教育背景 / Education</h2>
+      <div class="r-row">
+        <div class="r-row-left">
+          <strong>河北外国语学院</strong>
+          <span>本科</span>
+        </div>
+        <div class="r-row-right">
+          <p>航空服务艺术与管理</p>
+          <p class="r-period">2024 年毕业</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="r-section">
+      <h2>工作经历 / Experience</h2>
+      {jobs.map(j => (
+        <div class="r-row">
+          <div class="r-row-left">
+            <strong>{j.company}</strong>
+            <span>{j.role}</span>
+          </div>
+          <div class="r-row-right">
+            <p class="r-period">{j.period}</p>
+            <ul>
+              {j.bullets.map(b => <li>{b}</li>)}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <section class="r-section">
+      <h2>技能 / Skills</h2>
+      {skills.map(s => (
+        <div class="r-row">
+          <div class="r-row-left"><strong>{s.title}</strong></div>
+          <div class="r-row-right">
+            <p>{s.items.join(' · ')}</p>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <footer class="r-foot">
+      <p>cv.fuheng.vip · 最近更新 {new Date().toLocaleDateString('zh-CN')}</p>
+    </footer>
+  </article>
+</Layout>
+
+<script>
+  function bindPrint() {
+    const btn = document.getElementById('print-btn');
+    btn?.addEventListener('click', () => window.print());
+  }
+  document.addEventListener('astro:page-load', bindPrint);
+</script>
+
+<style>
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .back {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .back:hover { color: var(--accent); }
+  .print-btn {
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .print-btn:hover { background: var(--accent); }
+
+  .resume {
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--bg);
+    padding: 3rem;
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
+
+  .r-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .r-head h1 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .r-en {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    margin-top: 0.4rem;
+  }
+  .r-meta {
+    text-align: right;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .r-meta a { color: var(--ink-soft); }
+
+  .r-section {
+    margin-bottom: 2rem;
+  }
+  .r-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .r-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+    page-break-inside: avoid;
+  }
+  .r-row-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .r-row-left strong {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  .r-row-left span {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+  }
+  .r-row-right p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .r-period {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+  .r-row-right ul {
+    list-style: none;
+  }
+  .r-row-right li {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    padding-left: 1rem;
+    position: relative;
+    margin-bottom: 0.3rem;
+  }
+  .r-row-right li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  .r-foot {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.15em;
+  }
+
+  @media (max-width: 600px) {
+    .resume { padding: 1.5rem; }
+    .r-head { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .r-meta { text-align: left; }
+    .r-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+
+  @media print {
+    .no-print { display: none !important; }
+    .resume {
+      padding: 0;
+      border: none;
+      max-width: 100%;
+    }
+    .r-section { margin-bottom: 1.25rem; }
+  }
+</style>

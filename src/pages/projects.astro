@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  { idx: '01', title: '项目占位 ①', desc: '该项目内容稍后补充。', tag: 'TBD' },
+  { idx: '02', title: '项目占位 ②', desc: '该项目内容稍后补充。', tag: 'TBD' },
+  { idx: '03', title: '项目占位 ③', desc: '该项目内容稍后补充。', tag: 'TBD' },
+];
+---
+
+<Layout title="项目 · 付恒" pageId="projects">
+  <header class="page-head">
+    <div class="page-watermark" aria-hidden="true">04</div>
+    <p class="eyebrow">04 / 06 — Projects</p>
+    <h1 class="page-title">项目</h1>
+    <p class="page-lead">代表性项目案例,内容待补充。</p>
+  </header>
+
+  <div class="grid">
+    {projects.map(p => (
+      <article class="card">
+        <div class="card-top">
+          <span class="idx">{p.idx}</span>
+          <span class="tag">{p.tag}</span>
+        </div>
+        <h2>{p.title}</h2>
+        <p>{p.desc}</p>
+        <span class="more" aria-hidden="true">阅读更多 →</span>
+      </article>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    position: relative;
+    padding: 1.75rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-left: 2px solid transparent;
+    transition: border-color 0.25s;
+    pointer-events: none;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--ink);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+  }
+  .card:hover::before {
+    border-left-color: var(--accent);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--ink-muted);
+  }
+  .idx {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    padding: 0.18rem 0.55rem;
+    background: var(--bg-soft);
+    border-radius: 999px;
+  }
+
+  .card h2 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+  .card p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .more {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    transition: color 0.25s, transform 0.25s;
+  }
+  .card:hover .more {
+    color: var(--accent);
+  }
+</style>

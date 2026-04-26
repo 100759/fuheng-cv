@@ -1,0 +1,237 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** 当前页编号,用于结构化数据 / 当前态 */
+  pageId?: string;
+}
+
+const {
+  title = '付恒 · 顾问',
+  description = '付恒 — 教育与职业规划顾问 · 石家庄。作业帮 LPC 顾问、高顿保研顾问。',
+  pageId,
+} = Astro.props;
+
+const siteUrl = 'https://cv.fuheng.vip';
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = `${siteUrl}/og.svg`;
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '付恒',
+  alternateName: 'Fu Heng',
+  jobTitle: '顾问',
+  email: 'mailto:mail@fuheng.vip',
+  telephone: '+86-178-8870-0580',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: '石家庄',
+    addressCountry: 'CN',
+  },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: '河北外国语学院',
+  },
+  url: siteUrl,
+};
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <title>{title}</title>
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="付恒 CV" />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {/* JSON-LD Person */}
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} is:inline />
+
+    {/* 主题初始化 — 必须在样式之前内联,避免 FOUC */}
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved || (sysDark ? 'dark' : 'light');
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body data-page-id={pageId}>
+    <a href="#main" class="skip-link">跳到主要内容</a>
+    <div id="cursor-follower" aria-hidden="true"></div>
+    <Header />
+    <main id="main" tabindex="-1" transition:animate="slide">
+      <slot />
+    </main>
+    <footer>
+      <span>© 付恒 · {new Date().getFullYear()}</span>
+      <a href="mailto:mail@fuheng.vip">mail@fuheng.vip</a>
+    </footer>
+
+    {/* 全局键盘左右键章节翻页 (C2) */}
+    <script>
+      const order = ['/', '/experience', '/education', '/projects', '/skills', '/contact'];
+
+      function bindArrowNav() {
+        function onKey(e: KeyboardEvent) {
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          const tag = (e.target as HTMLElement)?.tagName;
+          if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+          const path = location.pathname.replace(/\/$/, '') || '/';
+          const i = order.indexOf(path);
+          if (i === -1) return;
+          if (e.key === 'ArrowRight' && i < order.length - 1) {
+            location.href = order[i + 1];
+          } else if (e.key === 'ArrowLeft' && i > 0) {
+            location.href = order[i - 1];
+          }
+        }
+        if (!(window as any).__arrowBound) {
+          (window as any).__arrowBound = true;
+          window.addEventListener('keydown', onKey);
+        }
+      }
+      document.addEventListener('astro:page-load', bindArrowNav);
+    </script>
+
+    {/* D2: 鼠标光环跟随 — 触屏 / reduced-motion 自动禁用 */}
+    <script>
+      function bindCursor() {
+        const dot = document.getElementById('cursor-follower');
+        if (!dot) return;
+        const isTouch = matchMedia('(pointer: coarse)').matches;
+        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (isTouch || reduceMotion) { dot.style.display = 'none'; return; }
+        if ((window as any).__cursorBound) return;
+        (window as any).__cursorBound = true;
+
+        let tx = 0, ty = 0, x = 0, y = 0;
+        window.addEventListener('mousemove', (e) => {
+          tx = e.clientX; ty = e.clientY;
+          dot.style.opacity = '1';
+        });
+        window.addEventListener('mouseleave', () => { dot.style.opacity = '0'; });
+
+        const interactive = 'a, button, [role="button"], input, textarea, .card';
+        document.addEventListener('mouseover', (e) => {
+          const t = e.target as HTMLElement;
+          if (t.closest(interactive)) dot.classList.add('hover');
+          else dot.classList.remove('hover');
+        });
+
+        function tick() {
+          x += (tx - x) * 0.18;
+          y += (ty - y) * 0.18;
+          dot.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+          requestAnimationFrame(tick);
+        }
+        tick();
+      }
+      document.addEventListener('astro:page-load', bindCursor);
+    </script>
+
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 999;
+        padding: 0.6rem 1rem;
+        background: var(--ink);
+        color: var(--bg);
+        text-decoration: none;
+        font-size: 0.85rem;
+      }
+      .skip-link:focus {
+        left: 1rem;
+        top: 1rem;
+        outline: 2px solid var(--accent);
+      }
+
+      /* D2: 鼠标跟随光环 */
+      #cursor-follower {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 28px;
+        height: 28px;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.25s, width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
+        mix-blend-mode: difference;
+      }
+      #cursor-follower.hover {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.9);
+        border-color: transparent;
+      }
+      @media (pointer: coarse) {
+        #cursor-follower { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #cursor-follower { display: none; }
+      }
+
+      footer {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1.5rem 2rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--ink-muted);
+        border-top: 1px solid var(--border);
+      }
+      footer a {
+        color: var(--ink-muted);
+        transition: color 0.2s;
+      }
+      footer a:hover { color: var(--accent); }
+
+      @media (max-width: 600px) {
+        footer { padding: 1.25rem 1.25rem 2rem; font-size: 0.75rem; }
+      }
+    </style>
+  </body>
+</html>

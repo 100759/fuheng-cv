@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBFAF7"/>
+      <stop offset="1" stop-color="#F2EEE6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="80" y="120" font-family="ui-monospace, Menlo, monospace" font-size="22" letter-spacing="6" fill="#999">SHIJIAZHUANG · CONSULTANT</text>
+  <text x="80" y="380" font-family="Georgia, 'Songti SC', serif" font-size="280" font-weight="500" fill="#1B1B1B" letter-spacing="-6">付恒</text>
+  <text x="80" y="460" font-family="Georgia, serif" font-size="42" fill="#555">Fu Heng — 教育与职业规划顾问</text>
+  <text x="80" y="555" font-family="ui-monospace, Menlo, monospace" font-size="20" letter-spacing="4" fill="#B8462A">CV.FUHENG.VIP</text>
+  <text x="1100" y="120" font-family="Georgia, serif" font-size="32" fill="transparent" stroke="#1B1B1B" stroke-width="1" text-anchor="end">01</text>
+</svg>

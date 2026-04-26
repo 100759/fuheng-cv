@@ -1,0 +1,364 @@
+---
+const navItems = [
+  { href: '/experience', label: '工作经历', num: '02' },
+  { href: '/education', label: '教育背景', num: '03' },
+  { href: '/projects',   label: '项目',     num: '04' },
+  { href: '/skills',     label: '技能',     num: '05' },
+  { href: '/contact',    label: '联系',     num: '06' },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header>
+  <a href="/" class="logo" aria-label="返回首页">
+    <span class="logo-mark">付</span>
+    <span class="logo-name">FU HENG</span>
+  </a>
+
+  <span class="clock" id="clock" aria-label="石家庄时间">--:--</span>
+
+  <nav class="nav-desktop" aria-label="主导航">
+    {navItems.map(item => (
+      <a
+        href={item.href}
+        class:list={['nav-link', { active: path === item.href }]}
+        aria-current={path === item.href ? 'page' : undefined}
+      >
+        <span class="nav-num">{item.num}</span>
+        <span class="nav-label">{item.label}</span>
+      </a>
+    ))}
+
+    <button id="theme-toggle" class="theme-btn" type="button" aria-label="切换主题">
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </nav>
+
+  <button id="menu-btn" class="menu-btn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-drawer">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div id="mobile-drawer" class="drawer" role="dialog" aria-modal="true" aria-label="主导航" hidden>
+  <div class="drawer-head">
+    <span class="drawer-title">导航</span>
+    <button id="menu-close" class="menu-close" type="button" aria-label="关闭菜单">×</button>
+  </div>
+  <nav class="drawer-nav">
+    {navItems.map(item => (
+      <a
+        href={item.href}
+        class:list={['drawer-link', { active: path === item.href }]}
+        aria-current={path === item.href ? 'page' : undefined}
+      >
+        <span class="dn-num">{item.num}</span>
+        <span class="dn-label">{item.label}</span>
+        <span class="dn-arrow" aria-hidden="true">→</span>
+      </a>
+    ))}
+  </nav>
+  <div class="drawer-foot">
+    <button id="theme-toggle-mobile" class="drawer-theme" type="button">
+      <span class="t-light">浅色</span>
+      <span class="t-sep">·</span>
+      <span class="t-dark">深色</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  /* === 时钟 === */
+  function tickClock() {
+    const el = document.getElementById('clock');
+    if (!el) return;
+    const fmt = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+    el.textContent = fmt.format(new Date()) + ' SJZ';
+  }
+  function startClock() {
+    tickClock();
+    // @ts-ignore
+    if (window.__clockTimer) clearInterval(window.__clockTimer);
+    // @ts-ignore
+    window.__clockTimer = setInterval(tickClock, 1000);
+  }
+
+  /* === 主题切换 === */
+  function applyTheme(theme: 'light' | 'dark') {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('theme', theme); } catch {}
+  }
+  function toggleTheme() {
+    const cur = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  }
+  function bindTheme() {
+    document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+    document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+  }
+
+  /* === 移动抽屉 === */
+  function bindDrawer() {
+    const btn = document.getElementById('menu-btn');
+    const drawer = document.getElementById('mobile-drawer');
+    const closeBtn = document.getElementById('menu-close');
+    if (!btn || !drawer) return;
+
+    function open() {
+      drawer!.removeAttribute('hidden');
+      requestAnimationFrame(() => drawer!.classList.add('open'));
+      btn!.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      drawer!.classList.remove('open');
+      btn!.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      setTimeout(() => drawer!.setAttribute('hidden', ''), 300);
+    }
+
+    btn.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+    drawer.querySelectorAll<HTMLAnchorElement>('.drawer-link').forEach(a => {
+      a.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hasAttribute('hidden')) close();
+    });
+  }
+
+  function init() {
+    startClock();
+    bindTheme();
+    bindDrawer();
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 1.5rem;
+    transition: background-color 0.4s, border-color 0.4s;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    color: var(--ink);
+  }
+  .logo-mark {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .logo-name {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--ink-muted);
+  }
+
+  .clock {
+    grid-column: 2;
+    justify-self: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .nav-desktop {
+    grid-column: 4;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after { width: 100%; }
+  .nav-link.active { color: var(--accent); }
+
+  .theme-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { color: var(--ink); border-color: var(--ink); }
+  .icon-sun, .icon-moon { display: none; }
+  :root[data-theme='light'] .icon-moon { display: block; }
+  :root[data-theme='dark']  .icon-sun  { display: block; }
+
+  .menu-btn {
+    display: none;
+    grid-column: 4;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .menu-btn span {
+    width: 16px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.2s;
+  }
+
+  /* ===== Drawer ===== */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .drawer.open { opacity: 1; transform: translateY(0); }
+  .drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--ink-muted);
+  }
+  .menu-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 38px;
+    height: 38px;
+    color: var(--ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .drawer-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .drawer-link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+    transition: background 0.2s, padding-left 0.25s;
+  }
+  .drawer-link:hover, .drawer-link:focus-visible { background: var(--bg-soft); padding-left: 1.85rem; }
+  .drawer-link.active { color: var(--accent); }
+  .dn-num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.15em;
+  }
+  .dn-label {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+  }
+  .dn-arrow { color: var(--ink-muted); }
+  .drawer-foot {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .drawer-theme {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--ink);
+    font-family: inherit;
+  }
+  .t-sep { color: var(--ink-muted); margin: 0 0.4rem; }
+  :root[data-theme='light'] .t-light { color: var(--accent); }
+  :root[data-theme='dark']  .t-dark  { color: var(--accent); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 820px) {
+    header {
+      padding: 0.85rem 1.25rem;
+      gap: 0.75rem;
+      grid-template-columns: auto 1fr auto;
+    }
+    .logo-name, .clock, .nav-desktop { display: none; }
+    .menu-btn { display: inline-flex; grid-column: 3; }
+  }
+</style>

@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const groups = [
+  {
+    title: '咨询能力',
+    en: 'Consulting',
+    items: ['学业规划', '保研指导', '面试辅导', '文书润色', '需求洞察'],
+  },
+  {
+    title: '工具',
+    en: 'Tools',
+    items: ['Office', 'Notion', '飞书 / 企业微信', '腾讯会议'],
+  },
+  {
+    title: '语言',
+    en: 'Languages',
+    items: ['中文 (母语)', 'English'],
+  },
+];
+---
+
+<Layout title="技能 · 付恒" pageId="skills">
+  <header class="page-head">
+    <div class="page-watermark" aria-hidden="true">05</div>
+    <p class="eyebrow">05 / 06 — Skills</p>
+    <h1 class="page-title">技能</h1>
+    <p class="page-lead">占位内容,可根据实际情况补充。</p>
+  </header>
+
+  {groups.map((g, i) => (
+    <section class="group">
+      <header>
+        <span class="g-num">{String(i + 1).padStart(2, '0')}</span>
+        <div>
+          <h2>{g.title}</h2>
+          <p class="g-en">{g.en}</p>
+        </div>
+      </header>
+      <ul>
+        {g.items.map(it => <li>{it}</li>)}
+      </ul>
+    </section>
+  ))}
+</Layout>
+
+<style>
+  .group {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .group:last-of-type { border-bottom: 1px solid var(--border); }
+
+  .group header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .g-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: var(--ink-muted);
+  }
+  .group h2 {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+  }
+  .g-en {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.15rem;
+  }
+
+  .group ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    align-content: flex-start;
+  }
+  .group li {
+    padding: 0.45rem 0.95rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .group li:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 700px) {
+    .group { grid-template-columns: 1fr; gap: 1rem; }
+  }
+</style>
