@@ -1,26 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const jobs = [
-  {
-    company: '作业帮',
-    role: 'LPC 顾问',
-    period: '时间待补充',
-    bullets: ['工作内容待补充'],
-  },
-  {
-    company: '高顿',
-    role: '保研顾问',
-    period: '时间待补充',
-    bullets: ['工作内容待补充'],
-  },
-];
-
-const skills = [
-  { title: '咨询能力', items: ['学业规划', '保研指导', '面试辅导', '文书润色'] },
-  { title: '工具',     items: ['Office', 'Notion', '飞书 / 企业微信'] },
-  { title: '语言',     items: ['中文 (母语)', 'English'] },
-];
+import { jobs, profile, skillGroups } from '../data/profile';
 ---
 
 <Layout title="简历 PDF · 付恒" description="付恒 个人简历(可打印 PDF 版本)" pageId="resume">
@@ -34,14 +14,14 @@ const skills = [
   <article class="resume">
     <header class="r-head">
       <div class="r-name-block">
-        <h1>付恒</h1>
-        <p class="r-en">Fu Heng</p>
+        <h1>{profile.name}</h1>
+        <p class="r-en">{profile.alternateName}</p>
       </div>
       <div class="r-meta">
-        <p>顾问 / Consultant</p>
-        <p><a href="mailto:mail@fuheng.vip">mail@fuheng.vip</a></p>
-        <p>+86 178 8870 0580</p>
-        <p>石家庄 · Shijiazhuang</p>
+        <p>{profile.role} / {profile.roleEn}</p>
+        <p><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+        <p>{profile.phone.display}</p>
+        <p>{profile.city} · {profile.cityEn}</p>
       </div>
     </header>
 
@@ -49,12 +29,12 @@ const skills = [
       <h2>教育背景 / Education</h2>
       <div class="r-row">
         <div class="r-row-left">
-          <strong>河北外国语学院</strong>
-          <span>本科</span>
+          <strong>{profile.school}</strong>
+          <span>{profile.degree}</span>
         </div>
         <div class="r-row-right">
-          <p>航空服务艺术与管理</p>
-          <p class="r-period">2024 年毕业</p>
+          <p>{profile.major}</p>
+          <p class="r-period">{profile.graduation}</p>
         </div>
       </div>
     </section>
@@ -79,7 +59,7 @@ const skills = [
 
     <section class="r-section">
       <h2>技能 / Skills</h2>
-      {skills.map(s => (
+      {skillGroups.map(s => (
         <div class="r-row">
           <div class="r-row-left"><strong>{s.title}</strong></div>
           <div class="r-row-right">
@@ -90,7 +70,7 @@ const skills = [
     </section>
 
     <footer class="r-foot">
-      <p>cv.fuheng.vip · 最近更新 {new Date().toLocaleDateString('zh-CN')}</p>
+      <p>{profile.siteUrl.replace('https://', '')} · 最近更新 {new Date().toLocaleDateString('zh-CN')}</p>
     </footer>
   </article>
 </Layout>
@@ -100,7 +80,11 @@ const skills = [
     const btn = document.getElementById('print-btn');
     btn?.addEventListener('click', () => window.print());
   }
-  document.addEventListener('astro:page-load', bindPrint);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindPrint, { once: true });
+  } else {
+    bindPrint();
+  }
 </script>
 
 <style>

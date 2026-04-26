@@ -1,23 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const groups = [
-  {
-    title: '咨询能力',
-    en: 'Consulting',
-    items: ['学业规划', '保研指导', '面试辅导', '文书润色', '需求洞察'],
-  },
-  {
-    title: '工具',
-    en: 'Tools',
-    items: ['Office', 'Notion', '飞书 / 企业微信', '腾讯会议'],
-  },
-  {
-    title: '语言',
-    en: 'Languages',
-    items: ['中文 (母语)', 'English'],
-  },
-];
+import { skillGroups } from '../data/profile';
 ---
 
 <Layout title="技能 · 付恒" pageId="skills">
@@ -28,7 +11,7 @@ const groups = [
     <p class="page-lead">占位内容,可根据实际情况补充。</p>
   </header>
 
-  {groups.map((g, i) => (
+  {skillGroups.map((g, i) => (
     <section class="group">
       <header>
         <span class="g-num">{String(i + 1).padStart(2, '0')}</span>

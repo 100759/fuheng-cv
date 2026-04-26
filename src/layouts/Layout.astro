@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import { profile } from '../data/profile';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 
@@ -16,26 +17,25 @@ const {
   pageId,
 } = Astro.props;
 
-const siteUrl = 'https://cv.fuheng.vip';
+const siteUrl = profile.siteUrl;
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImage = `${siteUrl}/og.svg`;
 
 const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: '付恒',
-  alternateName: 'Fu Heng',
-  jobTitle: '顾问',
-  email: 'mailto:mail@fuheng.vip',
-  telephone: '+86-178-8870-0580',
+  name: profile.name,
+  alternateName: profile.alternateName,
+  jobTitle: profile.role,
+  email: `mailto:${profile.email}`,
   address: {
     '@type': 'PostalAddress',
-    addressLocality: '石家庄',
+    addressLocality: profile.city,
     addressCountry: 'CN',
   },
   alumniOf: {
     '@type': 'CollegeOrUniversity',
-    name: '河北外国语学院',
+    name: profile.school,
   },
   url: siteUrl,
 };
@@ -97,7 +97,7 @@ const personJsonLd = {
     </main>
     <footer>
       <span>© 付恒 · {new Date().getFullYear()}</span>
-      <a href="mailto:mail@fuheng.vip">mail@fuheng.vip</a>
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
     </footer>
     {/* D2: 鼠标光环跟随 — 触屏 / reduced-motion 自动禁用 */}
     <script>
@@ -132,7 +132,11 @@ const personJsonLd = {
         }
         tick();
       }
-      document.addEventListener('astro:page-load', bindCursor);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindCursor, { once: true });
+      } else {
+        bindCursor();
+      }
     </script>
 
     <style>

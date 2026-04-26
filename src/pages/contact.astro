@@ -1,25 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { profile } from '../data/profile';
 
 const items = [
   {
     label: '邮箱',
     en: 'EMAIL',
-    value: 'mail@fuheng.vip',
-    href: 'mailto:mail@fuheng.vip',
-    copy: 'mail@fuheng.vip',
+    value: profile.email,
+    href: `mailto:${profile.email}`,
+    copy: profile.email,
   },
   {
     label: '电话',
     en: 'PHONE',
-    value: '178 8870 0580',
-    href: 'tel:17888700580',
-    copy: '17888700580',
+    value: profile.phone.display,
+    href: `tel:${profile.phone.compact}`,
+    copy: profile.phone.compact,
   },
   {
     label: '城市',
     en: 'CITY',
-    value: '石家庄',
+    value: profile.city,
   },
 ];
 ---
@@ -86,7 +87,11 @@ const items = [
       });
     });
   }
-  document.addEventListener('astro:page-load', bindCopy);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindCopy, { once: true });
+  } else {
+    bindCopy();
+  }
 </script>
 
 <style>

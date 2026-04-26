@@ -72,7 +72,11 @@ const sections = [
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
   }
-  document.addEventListener('astro:page-load', bindParallax);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindParallax, { once: true });
+  } else {
+    bindParallax();
+  }
 </script>
 
 <style>
