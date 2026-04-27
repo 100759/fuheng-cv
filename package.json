@@ -8,6 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro sync && astro build",
+    "verify": "npm run check",
     "astro": "astro"
   },
   "dependencies": {

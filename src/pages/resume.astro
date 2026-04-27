@@ -1,14 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { jobs, profile, skillGroups } from '../data/profile';
-
-const displayEmail = profile.email.replace('@', ' [at] ');
+import { displayEmail, jobs, profile, skillGroups } from '../data/profile';
 ---
 
 <Layout title="简历 PDF · 付恒" description="付恒 个人简历(可打印 PDF 版本)" pageId="resume">
   <div class="toolbar no-print">
-    <a class="back" href="/">← 返回主页</a>
-    <button id="print-btn" class="print-btn" type="button">
+    <a class="back ui-button ui-button-ghost" href="/">← 返回主页</a>
+    <button id="print-btn" class="print-btn ui-button ui-button-primary" type="button">
       📄 打印 / 另存为 PDF
     </button>
   </div>
@@ -104,17 +102,8 @@ const displayEmail = profile.email.replace('@', ' [at] ');
   }
   .back:hover { color: var(--accent); }
   .print-btn {
-    background: var(--ink);
-    color: var(--bg);
     border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.2s;
   }
-  .print-btn:hover { background: var(--accent); }
 
   .resume {
     max-width: 780px;

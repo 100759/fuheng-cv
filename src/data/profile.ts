@@ -17,6 +17,8 @@ export const profile = {
   graduation: '2024 年毕业',
 };
 
+export const displayEmail = profile.email.replace('@', ' [at] ');
+
 export const jobs = [
   {
     company: '作业帮',

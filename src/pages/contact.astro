@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { profile } from '../data/profile';
+import { displayEmail, profile } from '../data/profile';
 
 const items = [
   {
     label: '邮箱',
     en: 'EMAIL',
-    value: profile.email.replace('@', ' [at] '),
+    value: displayEmail,
     copy: profile.email,
   },
   {
@@ -42,7 +42,7 @@ const items = [
         <span class="value static">{it.value}</span>
 
         {it.copy ? (
-          <button class="copy" data-copy={it.copy} aria-label={`复制${it.label}`}>
+          <button class="ui-button ui-button-ghost copy" data-copy={it.copy} aria-label={`复制${it.label}`}>
             <span class="copy-text">复制</span>
           </button>
         ) : <span></span>}
@@ -53,27 +53,41 @@ const items = [
   <div class="signoff">
     <p>欢迎随时联系交流 ——</p>
     <p class="sign">付恒</p>
-    <a href="/resume/" class="resume-link">📄 查看 / 下载简历 PDF →</a>
+    <a href="/resume/" class="ui-button ui-button-ghost">📄 查看 / 下载简历 PDF →</a>
   </div>
 </Layout>
 
 <script>
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.append(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      return copied;
+    }
+  }
+
   function bindCopy() {
     document.querySelectorAll<HTMLButtonElement>('.copy').forEach(btn => {
-      if ((btn as any).__bound) return;
-      (btn as any).__bound = true;
+      if (btn.dataset.copyBound === 'true') return;
+      btn.dataset.copyBound = 'true';
       btn.addEventListener('click', async () => {
         const text = btn.dataset.copy || '';
         const textEl = btn.querySelector('.copy-text');
         if (!textEl) return;
         const original = textEl.textContent;
-        try {
-          await navigator.clipboard.writeText(text);
-          textEl.textContent = '已复制 ✓';
-          btn.classList.add('copied');
-        } catch {
-          textEl.textContent = '复制失败';
-        }
+        const ok = await copyText(text);
+        textEl.textContent = ok ? '已复制 ✓' : '请手动复制';
+        btn.classList.toggle('copied', ok);
         setTimeout(() => {
           textEl.textContent = original;
           btn.classList.remove('copied');
@@ -125,20 +139,8 @@ const items = [
   .value.static { color: var(--ink-soft); }
 
   .copy {
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    padding: 0.45rem 1rem;
-    border-radius: 999px;
     font-size: 0.8rem;
     color: var(--ink-soft);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s;
-  }
-  .copy:hover {
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
   }
   .copy.copied {
     background: var(--accent);
@@ -157,21 +159,6 @@ const items = [
     color: var(--ink);
     margin-bottom: 1.5rem;
   }
-  .resume-link {
-    display: inline-block;
-    padding: 0.6rem 1.1rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 999px;
-    color: var(--ink);
-    font-size: 0.9rem;
-    transition: all 0.2s;
-  }
-  .resume-link:hover {
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
-  }
-
   @media (max-width: 600px) {
     .row {
       grid-template-columns: 1fr auto;

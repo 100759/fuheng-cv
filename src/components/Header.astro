@@ -1,11 +1,5 @@
 ---
-const navItems = [
-  { href: '/experience/', label: '工作经历', num: '02' },
-  { href: '/education/', label: '教育背景', num: '03' },
-  { href: '/projects/',   label: '项目',     num: '04' },
-  { href: '/skills/',     label: '技能',     num: '05' },
-  { href: '/contact/',    label: '联系',     num: '06' },
-];
+import { navItems } from '../data/site';
 
 const normalizePath = (value: string) => {
   const clean = value.split('?')[0].split('#')[0];
@@ -74,6 +68,12 @@ const path = normalizePath(Astro.url.pathname);
 </div>
 
 <script>
+  declare global {
+    interface Window {
+      __clockTimer?: number;
+    }
+  }
+
   /* === 时钟 === */
   function tickClock() {
     const el = document.getElementById('clock');
@@ -88,9 +88,7 @@ const path = normalizePath(Astro.url.pathname);
   }
   function startClock() {
     tickClock();
-    // @ts-ignore
     if (window.__clockTimer) clearInterval(window.__clockTimer);
-    // @ts-ignore
     window.__clockTimer = setInterval(tickClock, 1000);
   }
 
@@ -105,8 +103,8 @@ const path = normalizePath(Astro.url.pathname);
   }
   function bindTheme() {
     document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(btn => {
-      if ((btn as any).__themeBound) return;
-      (btn as any).__themeBound = true;
+      if (btn.dataset.themeBound === 'true') return;
+      btn.dataset.themeBound = 'true';
       btn.addEventListener('click', toggleTheme);
     });
   }
@@ -119,8 +117,8 @@ const path = normalizePath(Astro.url.pathname);
     const focusable = 'a[href], button:not([disabled])';
     let lastFocus: HTMLElement | null = null;
     if (!btn || !drawer) return;
-    if ((btn as any).__drawerBound) return;
-    (btn as any).__drawerBound = true;
+    if (btn.dataset.drawerBound === 'true') return;
+    btn.dataset.drawerBound = 'true';
 
     function open() {
       lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -139,6 +137,12 @@ const path = normalizePath(Astro.url.pathname);
         lastFocus?.focus();
         lastFocus = null;
       }, 300);
+    }
+    function closeForNavigation() {
+      drawer!.classList.remove('open');
+      btn!.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      drawer!.setAttribute('hidden', '');
     }
     function onKey(e: KeyboardEvent) {
       if (drawer!.hasAttribute('hidden')) return;
@@ -166,7 +170,7 @@ const path = normalizePath(Astro.url.pathname);
       if (e.target === drawer) close();
     });
     drawer.querySelectorAll<HTMLAnchorElement>('.drawer-link').forEach(a => {
-      a.addEventListener('click', close);
+      a.addEventListener('click', closeForNavigation);
     });
     document.addEventListener('keydown', onKey);
   }

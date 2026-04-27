@@ -1,6 +1,6 @@
 ---
 import Header from '../components/Header.astro';
-import { profile } from '../data/profile';
+import { displayEmail, profile } from '../data/profile';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 
@@ -20,7 +20,6 @@ const {
 const siteUrl = profile.siteUrl;
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImage = `${siteUrl}/og.svg`;
-const displayEmail = profile.email.replace('@', ' [at] ');
 
 const personJsonLd = {
   '@context': 'https://schema.org',

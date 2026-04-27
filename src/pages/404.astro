@@ -8,8 +8,8 @@ import Layout from '../layouts/Layout.astro';
     <h1>这一页走丢了</h1>
     <p class="lead">你输入的地址在简历里没有对应的章节,可能是链接过期了。</p>
     <div class="actions">
-      <a class="btn primary" href="/">回到首页</a>
-      <a class="btn ghost" href="/contact/">联系我</a>
+      <a class="ui-button ui-button-primary" href="/">回到首页</a>
+      <a class="ui-button ui-button-ghost" href="/contact/">联系我</a>
     </div>
     <pre class="ascii" aria-hidden="true">{`
    ____  ___  ___
@@ -52,19 +52,6 @@ import Layout from '../layouts/Layout.astro';
     flex-wrap: wrap;
     margin-bottom: 4rem;
   }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.65rem 1.2rem;
-    font-size: 0.9rem;
-    border-radius: 999px;
-    transition: all 0.2s;
-  }
-  .btn.primary { background: var(--ink); color: var(--bg); }
-  .btn.primary:hover { background: var(--accent); }
-  .btn.ghost { color: var(--ink); border: 1px solid var(--border-strong); }
-  .btn.ghost:hover { border-color: var(--ink); }
-
   .ascii {
     font-family: var(--font-mono);
     color: var(--border-strong);
