@@ -20,6 +20,7 @@ const {
 const siteUrl = profile.siteUrl;
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImage = `${siteUrl}/og.svg`;
+const displayEmail = profile.email.replace('@', ' [at] ');
 
 const personJsonLd = {
   '@context': 'https://schema.org',
@@ -94,7 +95,7 @@ const personJsonLd = {
     </main>
     <footer>
       <span>© 付恒 · {new Date().getFullYear()}</span>
-      <span>{profile.email}</span>
+      <span>{displayEmail}</span>
     </footer>
     <style>
       footer {

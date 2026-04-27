@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { jobs, profile, skillGroups } from '../data/profile';
+
+const displayEmail = profile.email.replace('@', ' [at] ');
 ---
 
 <Layout title="简历 PDF · 付恒" description="付恒 个人简历(可打印 PDF 版本)" pageId="resume">
@@ -19,7 +21,7 @@ import { jobs, profile, skillGroups } from '../data/profile';
       </div>
       <div class="r-meta">
         <p>{profile.role} / {profile.roleEn}</p>
-        <p>{profile.email}</p>
+        <p>{displayEmail}</p>
         <p>{profile.phone.display}</p>
         <p>{profile.city} · {profile.cityEn}</p>
       </div>
