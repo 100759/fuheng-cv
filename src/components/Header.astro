@@ -25,17 +25,14 @@ const path = normalizePath(Astro.url.pathname);
 
   <nav class="nav-desktop" aria-label="主导航">
     {navItems.map(item => (
-      path === item.href ? (
-        <span class="nav-link active" aria-current="page">
-          <span class="nav-num">{item.num}</span>
-          <span class="nav-label">{item.label}</span>
-        </span>
-      ) : (
-        <a href={item.href} class="nav-link">
-          <span class="nav-num">{item.num}</span>
-          <span class="nav-label">{item.label}</span>
-        </a>
-      )
+      <a
+        href={item.href}
+        class:list={['nav-link', { active: path === item.href }]}
+        aria-current={path === item.href ? 'page' : undefined}
+      >
+        <span class="nav-num">{item.num}</span>
+        <span class="nav-label">{item.label}</span>
+      </a>
     ))}
 
     <button id="theme-toggle" class="theme-btn" type="button" aria-label="切换主题" data-theme-toggle>
@@ -56,19 +53,15 @@ const path = normalizePath(Astro.url.pathname);
   </div>
   <nav class="drawer-nav">
     {navItems.map(item => (
-      path === item.href ? (
-        <span class="drawer-link active" aria-current="page">
-          <span class="dn-num">{item.num}</span>
-          <span class="dn-label">{item.label}</span>
-          <span class="dn-arrow" aria-hidden="true">•</span>
-        </span>
-      ) : (
-        <a href={item.href} class="drawer-link">
-          <span class="dn-num">{item.num}</span>
-          <span class="dn-label">{item.label}</span>
-          <span class="dn-arrow" aria-hidden="true">→</span>
-        </a>
-      )
+      <a
+        href={item.href}
+        class:list={['drawer-link', { active: path === item.href }]}
+        aria-current={path === item.href ? 'page' : undefined}
+      >
+        <span class="dn-num">{item.num}</span>
+        <span class="dn-label">{item.label}</span>
+        <span class="dn-arrow" aria-hidden="true">{path === item.href ? '•' : '→'}</span>
+      </a>
     ))}
   </nav>
   <div class="drawer-foot">
@@ -212,6 +205,7 @@ const path = normalizePath(Astro.url.pathname);
     align-items: baseline;
     gap: 0.6rem;
     color: var(--ink);
+    padding: 0.35rem 0;
   }
   .logo-mark {
     font-family: var(--font-serif);
@@ -253,10 +247,8 @@ const path = normalizePath(Astro.url.pathname);
     gap: 0.35rem;
     color: var(--ink-soft);
     font-size: 0.9rem;
+    padding: 0.45rem 0;
     transition: color 0.2s;
-  }
-  span.nav-link {
-    cursor: default;
   }
   .nav-link:hover { color: var(--ink); }
   .nav-num {
@@ -269,7 +261,7 @@ const path = normalizePath(Astro.url.pathname);
     content: '';
     position: absolute;
     left: 0;
-    bottom: -6px;
+    bottom: 0.1rem;
     width: 0;
     height: 1px;
     background: var(--accent);
@@ -278,6 +270,9 @@ const path = normalizePath(Astro.url.pathname);
   .nav-link:hover::after,
   .nav-link.active::after { width: 100%; }
   .nav-link.active { color: var(--accent); }
+  .nav-link.active {
+    cursor: pointer;
+  }
 
   .theme-btn {
     background: transparent;
@@ -328,9 +323,16 @@ const path = normalizePath(Astro.url.pathname);
     display: flex;
     flex-direction: column;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.25s ease;
   }
-  .drawer.open { opacity: 1; }
+  .drawer[hidden] {
+    display: none !important;
+  }
+  .drawer.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
   .drawer-head {
     display: flex;
     justify-content: space-between;
@@ -369,10 +371,8 @@ const path = normalizePath(Astro.url.pathname);
     padding: 1.5rem 1.5rem;
     border-bottom: 1px solid var(--border);
     color: var(--ink);
+    min-height: 72px;
     transition: background 0.2s, padding-left 0.25s;
-  }
-  span.drawer-link {
-    cursor: default;
   }
   .drawer-link:hover, .drawer-link:focus-visible { background: var(--bg-soft); }
   .drawer-link.active { color: var(--accent); }
