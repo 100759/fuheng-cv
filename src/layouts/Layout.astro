@@ -27,7 +27,6 @@ const personJsonLd = {
   name: profile.name,
   alternateName: profile.alternateName,
   jobTitle: profile.role,
-  email: `mailto:${profile.email}`,
   address: {
     '@type': 'PostalAddress',
     addressLocality: profile.city,
@@ -89,33 +88,15 @@ const personJsonLd = {
     </script>
   </head>
   <body data-page-id={pageId}>
-    <a href="#main" class="skip-link">跳到主要内容</a>
     <Header />
-    <main id="main" tabindex="-1">
+    <main id="main">
       <slot />
     </main>
     <footer>
       <span>© 付恒 · {new Date().getFullYear()}</span>
-      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <span>{profile.email}</span>
     </footer>
     <style>
-      .skip-link {
-        position: absolute;
-        left: -9999px;
-        top: 0;
-        z-index: 999;
-        padding: 0.6rem 1rem;
-        background: var(--ink);
-        color: var(--bg);
-        text-decoration: none;
-        font-size: 0.85rem;
-      }
-      .skip-link:focus {
-        left: 1rem;
-        top: 1rem;
-        outline: 2px solid var(--accent);
-      }
-
       footer {
         max-width: 1100px;
         width: 100%;
@@ -128,11 +109,9 @@ const personJsonLd = {
         color: var(--ink-muted);
         border-top: 1px solid var(--border);
       }
-      footer a {
+      footer span {
         color: var(--ink-muted);
-        transition: color 0.2s;
       }
-      footer a:hover { color: var(--accent); }
 
       @media (max-width: 600px) {
         footer { padding: 1.25rem 1.25rem 2rem; font-size: 0.75rem; }

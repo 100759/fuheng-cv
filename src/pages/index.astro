@@ -2,11 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 
 const sections = [
-  { num: '02', label: '工作经历', desc: '作业帮 · 高顿',                  href: '/experience' },
-  { num: '03', label: '教育背景', desc: '河北外国语学院 · 2024',          href: '/education' },
-  { num: '04', label: '项目',     desc: '代表性案例（待补充）',           href: '/projects' },
-  { num: '05', label: '技能',     desc: '专业能力与工具（待补充）',       href: '/skills' },
-  { num: '06', label: '联系',     desc: '邮箱 · 电话',                    href: '/contact' },
+  { num: '02', label: '工作经历', desc: '作业帮 · 高顿',                  href: '/experience/' },
+  { num: '03', label: '教育背景', desc: '河北外国语学院 · 2024',          href: '/education/' },
+  { num: '04', label: '项目',     desc: '代表性案例（待补充）',           href: '/projects/' },
+  { num: '05', label: '技能',     desc: '专业能力与工具（待补充）',       href: '/skills/' },
+  { num: '06', label: '联系',     desc: '邮箱 · 电话',                    href: '/contact/' },
 ];
 ---
 
@@ -27,8 +27,8 @@ const sections = [
     <p class="hero-sub">Fu Heng — 教育与职业规划顾问</p>
 
     <div class="hero-actions">
-      <a class="btn primary" href="/experience">浏览经历 →</a>
-      <a class="btn ghost" href="mailto:mail@fuheng.vip">写封邮件</a>
+      <a class="btn primary" href="/experience/">浏览经历 →</a>
+      <span class="btn ghost static">mail@fuheng.vip</span>
     </div>
   </section>
 
@@ -159,6 +159,9 @@ const sections = [
   }
   .btn.ghost:hover {
     border-color: var(--ink);
+  }
+  .btn.static {
+    cursor: default;
   }
 
   /* 卡片网格 */

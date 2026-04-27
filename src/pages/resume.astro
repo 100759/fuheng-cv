@@ -19,7 +19,7 @@ import { jobs, profile, skillGroups } from '../data/profile';
       </div>
       <div class="r-meta">
         <p>{profile.role} / {profile.roleEn}</p>
-        <p><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+        <p>{profile.email}</p>
         <p>{profile.phone.display}</p>
         <p>{profile.city} · {profile.cityEn}</p>
       </div>
@@ -150,8 +150,6 @@ import { jobs, profile, skillGroups } from '../data/profile';
     color: var(--ink-soft);
     line-height: 1.7;
   }
-  .r-meta a { color: var(--ink-soft); }
-
   .r-section {
     margin-bottom: 2rem;
   }

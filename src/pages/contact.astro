@@ -7,14 +7,12 @@ const items = [
     label: '邮箱',
     en: 'EMAIL',
     value: profile.email,
-    href: `mailto:${profile.email}`,
     copy: profile.email,
   },
   {
     label: '电话',
     en: 'PHONE',
     value: profile.phone.display,
-    href: `tel:${profile.phone.compact}`,
     copy: profile.phone.compact,
   },
   {
@@ -30,7 +28,7 @@ const items = [
     <div class="page-watermark" aria-hidden="true">06</div>
     <p class="eyebrow">06 / 06 — Contact</p>
     <h1 class="page-title">联系方式</h1>
-    <p class="page-lead">点击下方信息可直接拨打或写邮件,也可一键复制。</p>
+    <p class="page-lead">点击复制按钮即可复制联系方式。</p>
   </header>
 
   <ul class="list">
@@ -41,11 +39,7 @@ const items = [
           <span class="en">{it.en}</span>
         </div>
 
-        {it.href ? (
-          <a class="value" href={it.href}>{it.value}</a>
-        ) : (
-          <span class="value static">{it.value}</span>
-        )}
+        <span class="value static">{it.value}</span>
 
         {it.copy ? (
           <button class="copy" data-copy={it.copy} aria-label={`复制${it.label}`}>
@@ -59,7 +53,7 @@ const items = [
   <div class="signoff">
     <p>欢迎随时联系交流 ——</p>
     <p class="sign">付恒</p>
-    <a href="/resume" class="resume-link">📄 查看 / 下载简历 PDF →</a>
+    <a href="/resume/" class="resume-link">📄 查看 / 下载简历 PDF →</a>
   </div>
 </Layout>
 
@@ -128,7 +122,6 @@ const items = [
     color: var(--ink);
     transition: color 0.2s;
   }
-  a.value:hover { color: var(--accent); }
   .value.static { color: var(--ink-soft); }
 
   .copy {

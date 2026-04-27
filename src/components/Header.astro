@@ -1,13 +1,18 @@
 ---
 const navItems = [
-  { href: '/experience', label: '工作经历', num: '02' },
-  { href: '/education', label: '教育背景', num: '03' },
-  { href: '/projects',   label: '项目',     num: '04' },
-  { href: '/skills',     label: '技能',     num: '05' },
-  { href: '/contact',    label: '联系',     num: '06' },
+  { href: '/experience/', label: '工作经历', num: '02' },
+  { href: '/education/', label: '教育背景', num: '03' },
+  { href: '/projects/',   label: '项目',     num: '04' },
+  { href: '/skills/',     label: '技能',     num: '05' },
+  { href: '/contact/',    label: '联系',     num: '06' },
 ];
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const normalizePath = (value: string) => {
+  const clean = value.split('?')[0].split('#')[0];
+  if (clean === '/') return '/';
+  return clean.endsWith('/') ? clean : `${clean}/`;
+};
+const path = normalizePath(Astro.url.pathname);
 ---
 
 <header>
